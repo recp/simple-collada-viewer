@@ -45,10 +45,10 @@ init() {
   loadCOLLADA();
 
   /* get first found camera */
-  ak_camFirstCamera(doc,
-                    NULL, /* for now we don't need to store cam ref */
-                    viewMatrix[0],
-                    projMatrix[0]);
+  ak_firstCamera(doc,
+                 NULL, /* for now we don't need to store cam ref */
+                 viewMatrix[0],
+                 projMatrix[0]);
   glm_mat4_inv(viewMatrix, scene->v);
 
   scene->pinfo    = gkDefaultProgram();
