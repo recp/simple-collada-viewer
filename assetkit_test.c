@@ -75,7 +75,7 @@ init() {
   /*      also like prog info, nodes, models use parent matrix if they      */
   /*      don't have any transform, this saves extra space, for instance;   */
   /*      if only root node has transform then all sub-nodes, node-instances*/
-  /*      will use same matrix, space=1 * sizeof(mat4) * ptrsize * refcount */
+  /*      will use same matrix, space=1 * sizeof(mat4) + ptrsize * refcount */
 
   glEnable(GL_DEPTH_TEST);
   glClearColor(0.64, 0.64, 0.64, 1);
