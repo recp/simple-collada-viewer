@@ -63,7 +63,8 @@ init() {
   /*       so we provided only ONE prog info so all nodes will use this    */
   scene->pinfo    = gkDefaultProgram();
 
-  /* invalidate VIEW matrix = force re-render */
+  /* invalidate VIEW matrix
+       = force re-render + re-calculate and cache model and final matrices  */
   scene->vIsValid = 0;
 
   glEnable(GL_DEPTH_TEST);
@@ -85,7 +86,8 @@ resize() {
                scene->v,
                scene->pv);
 
-  /* invalidate PROJECTION x VIEW = force re-render */
+  /* invalidate PROJECTION x VIEW
+       = force re-render + re-calculate and cache model and final matrices  */
   scene->pvIsValid = 0;
 
   /* render manually */
