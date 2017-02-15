@@ -23,35 +23,47 @@ mat4        viewMatrix;
 bool        do_render = true; /* render only if needed */
 
 void
-loadCOLLADA() {
+load_collada() {
   AkResult ret;
 
-  /* load collada */
+  /* load COLLADA, that's it! */
   ret = ak_load(&doc, fname, NULL);
   if (ret != AK_OK)
     exit(-1);
 
   /* load collada to OpenGL through libgk */
+
+  /* render context */
   ctx = gkContextNew();
-  ak_glLoadScene(ctx,
-                 doc,
-                 &doc->scene,
-                 GL_STATIC_DRAW,
-                 &scene);
+
+  /* load whole visual scene returns GkScene for rendering */
+  agk_loadScene(ctx,
+                doc,
+                &doc->scene,
+                GL_STATIC_DRAW,
+                &scene);
 }
 
 void
 init() {
-  loadCOLLADA();
+  load_collada();
 
-  /* get first found camera */
+  /* get first found camera and it's attribs (VIEW MATRIX, PROJ MATRIX) */
   ak_firstCamera(doc,
                  NULL, /* for now we don't need to store cam ref */
                  viewMatrix[0],
                  projMatrix[0]);
+
+  /* cache VIEW matrix */
   glm_mat4_inv(viewMatrix, scene->v);
 
+  /* default shaders: common materials */
+  /* NOTE: every node, model can have difeerent shaders e.g. GLSL profile  */
+  /*       if nodes, models don't have program info then they use paren's. */
+  /*       so we provided only ONE prog info so all nodes will use this    */
   scene->pinfo    = gkDefaultProgram();
+
+  /* invalidate VIEW matrix = force re-render */
   scene->vIsValid = 0;
 
   glEnable(GL_DEPTH_TEST);
@@ -60,16 +72,23 @@ init() {
   resize();
 }
 
+/* optional, resize projection with window */
 void
 resize() {
   do_render = true;
 
+  /* fix PROJECTION matrix */
   glm_perspective_resize(projMatrix);
+
+  /* cache VIEW and PROJECTION x VIEW matrices */
   glm_mat4_mul(projMatrix,
                scene->v,
                scene->pv);
+
+  /* invalidate PROJECTION x VIEW = force re-render */
   scene->pvIsValid = 0;
 
+  /* render manually */
   render();
 }
 
@@ -79,6 +98,10 @@ render() {
     return;
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  /* render scene, that's it! */
+  /* you can render specific Node, Model using RenderNode, RenderModel... */
+  /* so you don't have to have nodes  */
   gkRenderScene(scene);
 
   do_render = false;
@@ -92,6 +115,7 @@ dealloc() {
   /* TODO: free libgk */
 }
 
+/* OPTIONAL: */
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 /* this shows how to load custom shaders from folder */
