@@ -1,6 +1,6 @@
 # simple-collada-viewer
 
-# This is outdated! I'll update it later. All these libraries are updated and become better. 
+# This is outdated! I'll update it later. All these libraries are updated and became better. 
 
 This repo shows hot to load a document and render it using these libraries:
 - [AssetKit](https://github.com/recp/assetkit) 3D loader
